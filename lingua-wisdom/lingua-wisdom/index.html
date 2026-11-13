@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#5B21B6">
+    <meta name="description" content="LinguaWisdom: Türkçe anlamları, örnek cümleleri ve kelime türleriyle İngilizce-Türkçe sözlük, quiz ve günün kelimesi.">
+    <title>LinguaWisdom - İngilizce &amp; Türkçe Sözlük</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        try {
+            const t = localStorage.getItem('lw_theme');
+            if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
+        } catch (e) {}
+    </script>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-purple-100 selection:text-purple-900">
+
+    <!-- Header Navigation -->
+    <header class="glass-header sticky top-0 z-40 w-full">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 sm:h-20 gap-2">
+                
+                <!-- Logo + WhatsApp (sol üst) -->
+                <div class="flex items-center gap-3 sm:gap-4 min-w-0">
+                <div class="flex items-center gap-2.5 sm:gap-3.5 cursor-pointer min-w-0" onclick="resetFilters()">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 shrink-0 rounded-2xl bg-gradient-to-br from-amber-400 to-brand-gold flex items-center justify-center shadow-md shadow-amber-200 transform transition hover:scale-105">
+                        <i class="fa-solid fa-book-bookmark text-white text-xl sm:text-2xl"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-lg sm:text-2xl font-extrabold tracking-tight text-brand-purple leading-tight">
+                            LinguaWisdom
+                        </span>
+                        <span class="text-[10px] sm:text-xs font-black tracking-widest text-brand-gold uppercase -mt-0.5 sm:-mt-1">
+                            DICTIONARY
+                        </span>
+                    </div>
+                </div>
+
+                <a href="https://whatsapp.com/channel/0029VbELptpFi8xdk9GS2L3g" target="_blank" rel="noopener noreferrer" title="WhatsApp Kanalımıza Katıl" class="flex items-center gap-2 bg-[#25D366] hover:bg-[#1EBE5A] text-white w-10 h-10 lg:w-auto lg:h-auto lg:px-4 lg:py-2.5 justify-center rounded-2xl font-semibold text-sm shadow-sm transition-colors shrink-0">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="w-5 h-5"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    <span class="hidden lg:inline">WhatsApp Kanalı</span>
+                </a>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                    <button id="theme-btn" onclick="toggleTheme()" title="Karanlık / Aydınlık mod" class="w-10 h-10 sm:w-11 sm:h-11 shrink-0 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 shadow-sm flex items-center justify-center text-lg"></button>
+                    <button onclick="openRandomModal()" aria-label="Günün Kelimesi" class="flex items-center justify-center gap-2 h-10 sm:h-auto bg-gradient-to-r from-amber-500 to-brand-gold hover:opacity-95 text-white px-3 sm:px-4 sm:py-2.5 rounded-2xl font-semibold shadow-sm transition-all active:scale-95 text-xs sm:text-sm">
+                        <i class="fa-solid fa-shuffle text-amber-100 fa-bounce"></i>
+                        <span class="hidden sm:inline">Günün Kelimesi</span>
+                        <span class="hidden min-[400px]:inline sm:hidden">Rastgele</span>
+                    </button>
+                    <button onclick="openQuiz()" aria-label="Quick Quiz" class="hidden sm:flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-brand-purple hover:opacity-95 text-white px-4 py-2.5 rounded-2xl font-semibold text-sm shadow-md transition-all active:scale-95 shrink-0">
+                        <span aria-hidden="true">⚡</span>
+                        <span>Quick Quiz</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero / Search Section -->
+    <section id="hero" class="hero-bg py-6 sm:py-14 px-4 sm:px-6 lg:px-8 border-b border-slate-200/60">
+        <div class="max-w-4xl mx-auto text-center">
+            
+            <div class="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold bg-white border border-slate-200 text-brand-purple shadow-sm mb-3 sm:mb-4">
+                <i class="fa-solid fa-spell-check text-brand-gold"></i> 1266+ Kelimelik İngilizce - Türkçe Akıllı Sözlük
+            </div>
+
+            <h1 class="text-2xl sm:text-5xl font-black text-white tracking-tight leading-tight mb-3 drop-shadow-lg">
+                İngilizce <span class="text-brand-gold">&</span> Türkçe Sözlük
+            </h1>
+
+            <p class="text-slate-100 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed drop-shadow">
+                Türkçe anlamları, örnek cümleler ve kelime türleri ile pratik öğrenme platformu.
+            </p>
+
+            <!-- Search Bar -->
+            <div class="mt-5 sm:mt-8 max-w-2xl mx-auto relative">
+                <div class="relative flex items-center">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                    </div>
+                    <input type="search" id="search-input" oninput="handleSearch()" placeholder="Kelime ara... (örn: Resilient)" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" 
+                    class="w-full pl-12 pr-12 py-3.5 sm:py-4 bg-white rounded-2xl border border-slate-200 text-slate-800 placeholder-slate-400 font-medium focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent shadow-lg shadow-purple-100/30 transition-all">
+                    <button id="clear-search" onclick="clearSearch()" aria-label="Aramayı temizle" class="hidden absolute inset-y-0 right-0 w-12 justify-center flex items-center text-slate-400 hover:text-slate-600">
+                        <i class="fa-solid fa-circle-xmark text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Quiz (mobil) -->
+            <div class="mt-4 sm:hidden">
+                <button onclick="openQuiz()" class="inline-flex items-center justify-center gap-2 w-full max-w-md bg-gradient-to-r from-purple-600 to-brand-purple text-white px-5 py-3 rounded-2xl font-bold text-sm shadow-md active:scale-95 transition-all">
+                    <span aria-hidden="true">⚡</span> Quick Quiz <span class="font-medium opacity-80">· 10 soruluk hızlı test</span>
+                </button>
+            </div>
+
+            <!-- Category Filter Pills -->
+            <div class="cat-scroll flex flex-wrap justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-6" id="category-filters">
+                <button onclick="filterCategory('all')" class="cat-pill active whitespace-nowrap px-3 py-2 sm:px-4 rounded-xl sm:rounded-2xl text-[12px] sm:text-sm font-semibold transition-all bg-brand-purple text-white shadow-sm" data-cat="all">
+                    <i class="fa-solid fa-border-all mr-1.5"></i>Tümü
+                </button>
+                <button onclick="filterCategory('daily')" class="cat-pill whitespace-nowrap px-3 py-2 sm:px-4 rounded-xl sm:rounded-2xl text-[12px] sm:text-sm font-semibold transition-all bg-white border border-slate-200 text-slate-600 hover:bg-slate-50" data-cat="daily">
+                    <i class="fa-solid fa-coffee mr-1.5 text-amber-500"></i>Günlük Yaşam
+                </button>
+                <button onclick="filterCategory('business')" class="cat-pill whitespace-nowrap px-3 py-2 sm:px-4 rounded-xl sm:rounded-2xl text-[12px] sm:text-sm font-semibold transition-all bg-white border border-slate-200 text-slate-600 hover:bg-slate-50" data-cat="business">
+                    <i class="fa-solid fa-laptop-code mr-1.5 text-indigo-500"></i>İş & Teknoloji
+                </button>
+                <button onclick="filterCategory('travel')" class="cat-pill whitespace-nowrap px-3 py-2 sm:px-4 rounded-xl sm:rounded-2xl text-[12px] sm:text-sm font-semibold transition-all bg-white border border-slate-200 text-slate-600 hover:bg-slate-50" data-cat="travel">
+                    <i class="fa-solid fa-plane-departure mr-1.5 text-emerald-500"></i>Seyahat & Kültür
+                </button>
+                <button onclick="filterCategory('academic')" class="cat-pill whitespace-nowrap px-3 py-2 sm:px-4 rounded-xl sm:rounded-2xl text-[12px] sm:text-sm font-semibold transition-all bg-white border border-slate-200 text-slate-600 hover:bg-slate-50" data-cat="academic">
+                    <i class="fa-solid fa-graduation-cap mr-1.5 text-purple-500"></i>Akademik
+                </button>
+                <button onclick="filterCategory('idioms')" class="cat-pill whitespace-nowrap px-3 py-2 sm:px-4 rounded-xl sm:rounded-2xl text-[12px] sm:text-sm font-semibold transition-all bg-white border border-slate-200 text-slate-600 hover:bg-slate-50" data-cat="idioms">
+                    <i class="fa-solid fa-comments mr-1.5 text-rose-500"></i>Kalıp İfadeler
+                </button>
+                <button id="lesson-toggle" onclick="toggleLessonCatalog()" aria-expanded="false" aria-controls="lesson-panel" class="cat-pill whitespace-nowrap px-3 py-2 sm:px-4 rounded-xl sm:rounded-2xl text-[12px] sm:text-sm font-semibold transition-all bg-white border border-slate-200 text-slate-600 hover:bg-slate-50" data-cat="lesson">
+                    <i class="fa-solid fa-book-open-reader mr-1.5 text-sky-500"></i>Ders Bilgisi<span id="lesson-chevron" class="ml-1.5 inline-block transition-transform duration-200">▾</span>
+                </button>
+                <button onclick="filterCategory('basic200')" class="cat-pill whitespace-nowrap px-3 py-2 sm:px-4 rounded-xl sm:rounded-2xl text-[12px] sm:text-sm font-semibold transition-all bg-white border border-slate-200 text-slate-600 hover:bg-slate-50" data-cat="basic200">
+                    <i class="fa-solid fa-star mr-1.5 text-amber-500"></i>Temel 417
+                </button>
+                <button onclick="filterCategory('monthsnum')" class="cat-pill whitespace-nowrap px-3 py-2 sm:px-4 rounded-xl sm:rounded-2xl text-[12px] sm:text-sm font-semibold transition-all bg-white border border-slate-200 text-slate-600 hover:bg-slate-50" data-cat="monthsnum">
+                    <span class="mr-1.5">📅</span>Aylar & Sayılar
+                </button>
+            </div>
+
+            <!-- Ders Bilgisi kataloğu (açılır) -->
+            <div id="lesson-panel" class="hidden mt-3 max-w-md mx-auto text-left bg-white border border-slate-200 rounded-3xl p-3 shadow-sm">
+                <div class="px-3 pt-1 pb-2 text-[11px] font-bold uppercase tracking-wider text-slate-500">Ders Bilgisi</div>
+                <button onclick="filterCategory('grade11')" class="lesson-item w-full flex items-center justify-between gap-2 px-3 py-3 rounded-2xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors" data-cat="grade11">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-book-open-reader text-sky-500"></i>11. Sınıf</span>
+                    <span class="lesson-count text-xs font-bold text-slate-400" data-count-cat="grade11">0</span>
+                </button>
+                <div class="ml-6 pl-3 border-l-2 border-purple-100 mt-1">
+                    <div class="px-3 pt-1 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">Ortaokul</div>
+                    <button onclick="filterCategory('lgs')" class="lesson-item w-full flex items-center justify-between gap-2 px-3 py-3 rounded-2xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors" data-cat="lgs">
+                        <span class="flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-rose-500"></i>LGS</span>
+                        <span class="lesson-count text-xs font-bold text-slate-400" data-count-cat="lgs">0</span>
+                    </button>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+
+    <!-- Main Word List Section -->
+    <main class="main-bg max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 flex-grow">
+
+        <!-- Quiz tanıtım bandı -->
+        <div class="relative overflow-hidden rounded-3xl mb-6 sm:mb-8 p-5 sm:p-7 bg-gradient-to-r from-brand-purple via-purple-700 to-purple-900 text-white shadow-lg flex items-center justify-between gap-4">
+            <span class="banner-float absolute -right-4 -top-4 text-7xl sm:text-8xl opacity-15 select-none pointer-events-none" aria-hidden="true">📚</span>
+            <span class="absolute right-24 bottom-1 text-5xl opacity-10 select-none pointer-events-none hidden sm:block" aria-hidden="true">✨</span>
+            <div class="relative min-w-0">
+                <div class="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-amber-300 mb-1">Kendini dene</div>
+                <h2 class="text-base sm:text-2xl font-black leading-tight">Kelimeleri ne kadar biliyorsun?</h2>
+                <p class="text-xs sm:text-sm text-purple-100 mt-1">Rastgele 10 kelimelik hızlı testle öğrendiklerini pekiştir.</p>
+            </div>
+            <button onclick="openQuiz()" class="relative shrink-0 bg-brand-gold hover:bg-amber-600 text-white font-bold text-xs sm:text-sm px-4 sm:px-6 py-3 rounded-2xl shadow-md active:scale-95 transition-all whitespace-nowrap">Başla</button>
+        </div>
+
+        
+        <div class="flex justify-between items-center gap-3 mb-4 sm:mb-6">
+            <h2 id="section-title" class="text-base sm:text-xl font-bold text-brand-purple flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-brand-gold"></i> Tüm Kelimeler
+            </h2>
+            <span id="results-count" class="shrink-0 whitespace-nowrap text-xs font-bold text-slate-500 bg-white border border-slate-200 px-3.5 py-1.5 rounded-full shadow-sm">
+                1266 kelime listeleniyor
+            </span>
+        </div>
+
+        <!-- Dictionary Grid -->
+        <div id="dictionary-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <!-- Dynamic Cards -->
+        </div>
+
+        <!-- Load more -->
+        <div id="load-more-wrap" class="hidden text-center mt-6">
+            <button id="load-more-btn" onclick="loadMore()" class="bg-white border border-slate-200 text-brand-purple px-6 py-3 rounded-2xl font-semibold text-sm shadow-sm active:scale-95 transition-all">Daha fazla göster</button>
+            <div id="load-sentinel" class="h-px"></div>
+        </div>
+
+        <!-- Empty Search Result -->
+        <div id="empty-state" class="hidden text-center py-16 bg-white rounded-3xl border border-slate-200 my-6 shadow-sm">
+            <div class="w-16 h-16 bg-purple-50 text-brand-purple rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-solid fa-book-open-reader"></i>
+            </div>
+            <h3 id="empty-title" class="text-lg font-bold text-slate-800 mb-1">Eşleşen kelime bulunamadı</h3>
+            <p id="empty-desc" class="text-slate-500 text-xs sm:text-sm max-w-sm mx-auto mb-6">Arama kriterlerinizi değiştirerek tekrar deneyebilirsiniz.</p>
+            <button onclick="resetFilters()" class="bg-brand-purple text-white px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm hover:bg-brand-purpleDark transition-all shadow-sm">
+                Aramayı Sıfırla
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 pt-8 sm:pt-10 pb-8 mt-8 sm:mt-12 text-slate-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-brand-gold flex items-center justify-center text-white">
+                        <i class="fa-solid fa-book-bookmark text-lg"></i>
+                    </div>
+                    <span class="text-xl font-extrabold text-brand-purple tracking-tight">LinguaWisdom Dictionary</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-500 text-center md:text-left">
+                    &copy; 2026 LinguaWisdom. Tüm hakları saklıdır.
+                </p>
+                <div class="flex gap-4 text-slate-400">
+                    <a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-github text-lg"></i></a>
+                    <a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-x-twitter text-lg"></i></a>
+                    <a href="#" class="hover:text-brand-gold transition-colors"><i class="fa-brands fa-linkedin text-lg"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Word Modal -->
+    <div id="random-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl transform scale-95 transition-transform duration-300 relative border border-slate-200" id="modal-card">
+            
+            <div class="flex justify-between items-center mb-6">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900">
+                    <i class="fa-solid fa-star text-brand-gold fa-spin"></i> Günün Kelimesi
+                </span>
+                <button onclick="closeRandomModal()" class="w-10 h-10 sm:w-8 sm:h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="modal-content">
+                <!-- Dynamic Content -->
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-100 flex gap-3">
+                <button onclick="getRandomWord()" class="flex-1 bg-brand-gold hover:bg-amber-600 text-white font-semibold py-3 rounded-2xl transition-colors flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <i class="fa-solid fa-shuffle"></i> Başka Kelime Getir
+                </button>
+                <button onclick="closeRandomModal()" class="px-5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-2xl transition-colors text-sm">
+                    Kapat
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Quiz Modal -->
+    <div id="quiz-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden opacity-0 transition-opacity duration-300" role="dialog" aria-modal="true" aria-label="Quick Quiz">
+        <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full max-h-[92vh] overflow-y-auto p-5 sm:p-8 shadow-2xl transform scale-95 transition-transform duration-300 relative border border-slate-200" id="quiz-card">
+            <div class="flex justify-between items-center mb-4">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-purple-50 text-brand-purple">⚡ Quick Quiz</span>
+                <button onclick="closeQuiz()" aria-label="Kapat" class="w-10 h-10 sm:w-8 sm:h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="quiz-content"></div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:bottom-6 sm:right-6 justify-center sm:justify-start bg-brand-purple text-white px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 z-50 transform translate-y-24 opacity-0 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-amber-400 text-lg"></i>
+        <span id="toast-msg" class="text-xs sm:text-sm font-medium">İşlem gerçekleştirildi.</span>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
